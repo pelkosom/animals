@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: "create breed and animal table"
+      author: barci.peter@gmail.com
+      changes:
+        - createTable:
+            tableName: breed
+            columns:
+              - column:
+                  name: id
+                  type: long
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_breed
+            tableName: breed
+        - createTable:
+            tableName: animal
+            columns:
+              - column:
+                  name: id
+                  type: long
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: age
+                  type: int
+                  constraints:
+                    nullable: false
+#                    TODO - age > 0
+              - column:
+                  name: gender
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+#                    enum
+              - column:
+                  name: breed_id
+                  type: long
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_animal
+            tableName: animal
+        -forei
