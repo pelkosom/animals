@@ -56,4 +56,4 @@ databaseChangeLog:
             columnNames: id
             constraintName: pk_animal
             tableName: animal
-        -forei
+#        -forei
