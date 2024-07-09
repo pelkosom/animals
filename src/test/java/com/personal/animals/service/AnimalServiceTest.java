@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 class AnimalServiceTest {
 
 
-//  TODO
+//  TODO - implement tests
   @Test
   void getAnimalsTest() {
 

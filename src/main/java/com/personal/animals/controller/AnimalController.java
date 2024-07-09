@@ -4,6 +4,7 @@ import com.personal.animals.dto.AnimalDto;
 import com.personal.animals.service.AnimalService;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-//BEST practice, throws - maybe @ControllerAdvice
 @RestController
 @RequestMapping("/api/v1/animals")
 @RequiredArgsConstructor
@@ -56,8 +56,10 @@ public class AnimalController {
   @PutMapping(value = "/update-animal")
   public ResponseEntity<AnimalDto> updateAnimal(@RequestBody AnimalDto animalDto) {
     try {
-      AnimalDto updatedAnimal = animalService.updateAnimal(animalDto);
-      return ResponseEntity.ok().body(updatedAnimal);
+      Optional<AnimalDto> updatedAnimalDto = animalService.updateAnimal(animalDto);
+      return updatedAnimalDto
+          .map(dto -> ResponseEntity.ok().body(dto))
+          .orElseGet(() -> ResponseEntity.notFound().build());
     } catch (IllegalArgumentException e) {
       return new ResponseEntity("Failed to update animal: " + e.getMessage(),
           HttpStatus.INTERNAL_SERVER_ERROR);

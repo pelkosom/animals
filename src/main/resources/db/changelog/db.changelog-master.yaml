@@ -8,7 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: long
+                  type: bigint
                   constraints:
                     nullable: false
               - column:
@@ -27,7 +27,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: long
+                  type: bigint
                   constraints:
                     nullable: false
               - column:
@@ -48,7 +48,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: breed_id
-                  type: long
+                  type: bigint
                   constraints:
                     nullable: false
         - addPrimaryKey:

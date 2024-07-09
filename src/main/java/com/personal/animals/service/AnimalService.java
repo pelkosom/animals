@@ -30,7 +30,6 @@ public class AnimalService {
         .orElse(ResponseEntity.notFound().build());
   }
 
-//  TODO
   public boolean deleteAnimal(long id) {
     Optional<Animal> existingAnimal = animalRepository.findById(id);
     if (existingAnimal.isPresent()) {
@@ -45,21 +44,31 @@ public class AnimalService {
   }
 
 
-//  TODO co ak uz esxituje - duplicate id?
   public AnimalDto addAnimal(AnimalDto animalDto) throws IllegalArgumentException {
     animalDtoValidationService.validate(animalDto);
+
+    Optional<Animal> existingAnimal = animalRepository.findById(animalDto.id());
+    if (existingAnimal.isPresent()) {
+      throw new IllegalArgumentException("Animal already exists with id: " + animalDto.id());
+    }
+
     Animal animal = animalDtoMapper.mapToEntity(animalDto);
     Animal savedAnimal = animalRepository.save(animal);
     return animalDtoMapper.mapToDto(savedAnimal);
   }
 
-  public AnimalDto updateAnimal(AnimalDto animalDto) throws IllegalArgumentException {
+  public Optional<AnimalDto> updateAnimal(AnimalDto animalDto) throws IllegalArgumentException {
 
-//    animalRepository.findById(animalDto.get())
-
-//    TODO exception from mapper is not thrown in api response
-    Animal animal = animalDtoMapper.mapToEntity(animalDto);
-    Animal savedAnimal = animalRepository.save(animal);
-    return animalDtoMapper.mapToDto(savedAnimal);
+    Optional<Animal> existingAnimal = animalRepository.findById(animalDto.id());
+    if (existingAnimal.isPresent()) {
+      try {
+        Animal animal = animalDtoMapper.mapToEntity(animalDto);
+        Animal updatedAnimal = animalRepository.save(animal);
+        return Optional.of(animalDtoMapper.mapToDto(updatedAnimal));
+      } catch (Exception e) {
+        throw new IllegalStateException("Failed to update animal: " + e.getMessage());
+      }
+    }
+    return Optional.empty();
   }
 }

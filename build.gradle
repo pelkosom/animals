@@ -56,18 +56,7 @@ dependencies {
 
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 
-//	TODO
-
-//	// https://mvnrepository.com/artifact/org.postgresql/postgresql
-//	implementation 'org.postgresql:postgresql:42.7.3'
-
-	// core runtime-only libs
-//	runtimeOnly "org.postgresql:postgresql"
-
-//	implementation group: 'org.postgresql', name: 'postgresql'
-//
-	runtimeOnly 'com.h2database:h2'
-
+	runtimeOnly "org.postgresql:postgresql"
 }
 
 tasks.named('test') {
