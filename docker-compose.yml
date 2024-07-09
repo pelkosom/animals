@@ -1,8 +1,0 @@
-version: '3.8'
-
-services:
-  animals:
-    container_name: animals
-    image: animals:0.0.1-SNAPSHOT
-    ports:
-      - 8080:8080
