@@ -3,6 +3,7 @@ package com.personal.animals.controller;
 import com.personal.animals.dto.AnimalDto;
 import com.personal.animals.service.AnimalService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -18,26 +19,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/animals")
+@RequestMapping("/api/v1/animals/")
 @RequiredArgsConstructor
 public class AnimalController {
 
   private final AnimalService animalService;
 
   @Operation(summary = "Creates new animal")
-  @PostMapping(value = "/add-animal")
-  public ResponseEntity<AnimalDto> addAnimal(@RequestBody AnimalDto animalDto) {
-    try {
-      AnimalDto createdAnimal = animalService.addAnimal(animalDto);
-      return ResponseEntity.status(HttpStatus.CREATED).body(createdAnimal);
-    } catch (IllegalArgumentException e) {
-      return new ResponseEntity("Failed to create animal: " + e.getMessage(),
-          HttpStatus.BAD_REQUEST);
-    }
+  @PostMapping
+  public ResponseEntity<AnimalDto> addAnimal(@RequestBody @Valid AnimalDto animalDto) {
+    AnimalDto createdAnimal = animalService.addAnimal(animalDto);
+    return ResponseEntity.status(HttpStatus.CREATED).body(createdAnimal);
   }
 
   @Operation(summary = "Deletes existing animal by id")
-  @DeleteMapping("/delete-animal/{id}")
+  @DeleteMapping("/{id}")
   public ResponseEntity<Void> removeAnimal(@PathVariable long id) {
     if (animalService.deleteAnimal(id)) {
       return ResponseEntity.noContent().build();
@@ -47,35 +43,25 @@ public class AnimalController {
   }
 
   @Operation(summary = "Get animal by id")
-  @GetMapping("/animal/{id}")
+  @GetMapping("/{id}")
   public ResponseEntity<AnimalDto> getAnimal(@PathVariable long id) {
-    return animalService.getAnimalById(id);
+    return animalService.getAnimalById(id)
+        .map(ResponseEntity::ok)
+        .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   @Operation(summary = "Update animal")
-  @PutMapping(value = "/update-animal")
-  public ResponseEntity<AnimalDto> updateAnimal(@RequestBody AnimalDto animalDto) {
-    try {
-      Optional<AnimalDto> updatedAnimalDto = animalService.updateAnimal(animalDto);
-      return updatedAnimalDto
-          .map(dto -> ResponseEntity.ok().body(dto))
-          .orElseGet(() -> ResponseEntity.notFound().build());
-    } catch (IllegalArgumentException e) {
-      return new ResponseEntity("Failed to update animal: " + e.getMessage(),
-          HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+  @PutMapping
+  public ResponseEntity<AnimalDto> updateAnimal(@RequestBody @Valid AnimalDto animalDto) {
+    Optional<AnimalDto> updatedAnimalDto = animalService.updateAnimal(animalDto);
+    return updatedAnimalDto
+        .map(dto -> ResponseEntity.ok().body(dto))
+        .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   @Operation(summary = "Get all animals")
-  @GetMapping(value = "/get-all-animals")
+  @GetMapping
   public ResponseEntity<List<AnimalDto>> getAnimals() {
-
-    List<AnimalDto> animals = animalService.getAnimals();
-
-    if (animals.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
-
-    return ResponseEntity.ok(animals);
+    return ResponseEntity.ok(animalService.getAnimals());
   }
 }

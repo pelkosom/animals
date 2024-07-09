@@ -7,7 +7,6 @@ import com.personal.animals.persitance.AnimalRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,51 +22,39 @@ public class AnimalService {
     return animalDtoMapper.mapToDto(animalEntities);
   }
 
-  public ResponseEntity<AnimalDto> getAnimalById(long id) {
+  public Optional<AnimalDto> getAnimalById(long id) {
     return animalRepository.findById(id)
-        .map(animalDtoMapper::mapToDto)
-        .map(ResponseEntity::ok)
-        .orElse(ResponseEntity.notFound().build());
+        .map(animalDtoMapper::mapToDto);
   }
 
   public boolean deleteAnimal(long id) {
     Optional<Animal> existingAnimal = animalRepository.findById(id);
     if (existingAnimal.isPresent()) {
-      try {
-        animalRepository.deleteById(existingAnimal.get().getId());
-        return true;
-      } catch (Exception e) {
-        throw new IllegalStateException("Failed to delete animal: " + e.getMessage());
-      }
+      animalRepository.deleteById(existingAnimal.get().getId());
+      return true;
     }
     return false;
   }
 
 
-  public AnimalDto addAnimal(AnimalDto animalDto) throws IllegalArgumentException {
-    animalDtoValidationService.validate(animalDto);
-
+  public AnimalDto addAnimal(AnimalDto animalDto) {
     Optional<Animal> existingAnimal = animalRepository.findById(animalDto.id());
     if (existingAnimal.isPresent()) {
       throw new IllegalArgumentException("Animal already exists with id: " + animalDto.id());
     }
 
+    animalDtoValidationService.validate(animalDto);
     Animal animal = animalDtoMapper.mapToEntity(animalDto);
     Animal savedAnimal = animalRepository.save(animal);
     return animalDtoMapper.mapToDto(savedAnimal);
   }
 
-  public Optional<AnimalDto> updateAnimal(AnimalDto animalDto) throws IllegalArgumentException {
-
+  public Optional<AnimalDto> updateAnimal(AnimalDto animalDto) {
     Optional<Animal> existingAnimal = animalRepository.findById(animalDto.id());
     if (existingAnimal.isPresent()) {
-      try {
-        Animal animal = animalDtoMapper.mapToEntity(animalDto);
-        Animal updatedAnimal = animalRepository.save(animal);
-        return Optional.of(animalDtoMapper.mapToDto(updatedAnimal));
-      } catch (Exception e) {
-        throw new IllegalStateException("Failed to update animal: " + e.getMessage());
-      }
+      Animal animalEntity = animalDtoMapper.mapToEntity(animalDto);
+      Animal updatedAnimalEntity = animalRepository.save(animalEntity);
+      return Optional.of(animalDtoMapper.mapToDto(updatedAnimalEntity));
     }
     return Optional.empty();
   }

@@ -18,14 +18,9 @@ public class AnimalWithDetailsController {
   private final AnimalWithDetailService animalWithDetailService;
 
   @Operation(summary = "Get all animals with details")
-  @GetMapping("/get-all-animals")
+  @GetMapping
   public ResponseEntity<List<AnimalWithDetailsDto>> getAnimalsWithDetails() {
-
     List<AnimalWithDetailsDto> animalsWithDetails = animalWithDetailService.getAnimalsWithDetails();
-
-    if (animalsWithDetails.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
     return ResponseEntity.ok(animalsWithDetails);
   }
 }

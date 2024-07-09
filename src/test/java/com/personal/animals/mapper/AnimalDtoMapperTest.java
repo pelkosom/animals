@@ -101,8 +101,8 @@ class AnimalDtoMapperTest {
   private static AnimalDto getAnimalDto() {
     return AnimalDto.builder()
         .gender("MALE")
-        .breedId(1)
-        .id(1)
+        .breedId(1L)
+        .id(1L)
         .age(2)
         .name("Dog")
         .age(2)

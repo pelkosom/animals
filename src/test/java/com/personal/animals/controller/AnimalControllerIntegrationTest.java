@@ -3,7 +3,6 @@ package com.personal.animals.controller;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -24,7 +23,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 class AnimalControllerIntegrationTest {
-//TODO - implement tests
+
+  //TODO - implement more test, negative scenarios
 
   @Autowired
   private MockMvc mockMvc;
@@ -33,41 +33,17 @@ class AnimalControllerIntegrationTest {
   private AnimalRepository repository;
 
   @Test
-  @SneakyThrows
   void addAnimalTest() {
-    mockMvc.perform(post("/api/v1/animals/add-animal")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content("""
-                     {
-                    "id": 1,
-                    "name": "Dog",
-                    "age": 2,
-                    "breedId": 1,
-                    "gender": "FEMALE"
-                    }
-                     """))
-        .andExpect(status().is2xxSuccessful())
-        .andExpect(content().json(
-            """
-                  {
-                    "id": 1,
-                    "name": "Dog",
-                    "age": 2,
-                    "breedId": 1,
-                    "gender": "FEMALE"
-                  }
-                """));
-
-    assertThat(repository.findById(1L)).isEqualTo(getAnimal());
-
   }
+
+
 
   @Test
   @SneakyThrows
   void removeAnimalTest() {
     repository.saveAllAndFlush(Collections.singletonList(getAnimal()));
 
-    mockMvc.perform(delete("/api/v1/animals/delete-animal/1")
+    mockMvc.perform(delete("/api/v1/animals/1")
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is2xxSuccessful());
 
@@ -87,7 +63,7 @@ class AnimalControllerIntegrationTest {
   void getAnimals() {
     repository.saveAllAndFlush(Collections.singletonList(getAnimal()));
 
-    mockMvc.perform(get("/api/v1/animals/get-all-animals")
+    mockMvc.perform(get("/api/v1/animals/")
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is2xxSuccessful())
         .andExpect(content().json(

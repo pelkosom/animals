@@ -19,58 +19,29 @@ class AnimalDtoValidationServiceTest {
   @Test
   void validateDoesNotThrowTest() {
     AnimalDto animalDto = AnimalDto.builder()
-        .id(1)
+        .id(1L)
         .name("Dog")
         .age(2)
-        .breedId(1)
+        .breedId(1L)
         .gender("MALE")
         .build();
 
     assertDoesNotThrow(() -> animalDtoValidationService.validate(animalDto));
   }
-  @Test
-  void validateAgeThrowsTest() {
-    AnimalDto animalDto = AnimalDto.builder()
-        .id(1)
-        .name("Dog")
-        .age(0)
-        .breedId(1)
-        .gender("MALE")
-        .build();
-
-    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-        () -> animalDtoValidationService.validate(animalDto));
-    assertThat(exception).hasMessage("Age must be greater than 0");
-  }
-
-  @Test
-  void validateNameThrowsTest() {
-    AnimalDto animalDto = AnimalDto.builder()
-        .id(1)
-        .name(null)
-        .age(3)
-        .breedId(1)
-        .gender("MALE")
-        .build();
-
-    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-        () -> animalDtoValidationService.validate(animalDto));
-    assertThat(exception).hasMessage("Name must not be null");
-  }
 
   @Test
   void validateGenderThrowsTest() {
     AnimalDto animalDto = AnimalDto.builder()
-        .id(1)
+        .id(1L)
         .name("name")
         .age(3)
-        .breedId(1)
+        .breedId(1L)
         .gender("unknown")
         .build();
 
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
         () -> animalDtoValidationService.validate(animalDto));
-    assertThat(exception).hasMessage("No enum constant com.personal.animals.enums.Gender.unknown");
+    assertThat(exception).hasMessage("Allowed value for gender is: MALE or FEMALE");
   }
 
 }

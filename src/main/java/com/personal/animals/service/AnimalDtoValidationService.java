@@ -8,24 +8,14 @@ import org.springframework.stereotype.Service;
 public class AnimalDtoValidationService {
 
   public void validate(AnimalDto animalDto) {
-    validateAgeGreaterThanZero(animalDto.age());
-    validateNameNotNull(animalDto.name());
     validateGender(animalDto.gender());
   }
 
-  private void validateAgeGreaterThanZero(int age) {
-    if (age <= 0) {
-      throw new IllegalArgumentException("Age must be greater than 0");
-    }
-  }
-
-  private void validateNameNotNull(String name) {
-    if (name == null) {
-      throw new IllegalArgumentException("Name must not be null");
-    }
-  }
-
   private void validateGender(String gender) {
-    Gender.valueOf(gender);
+    try {
+      Gender.valueOf(gender);
+    } catch (IllegalArgumentException e) {
+      throw new IllegalArgumentException("Allowed value for gender is: MALE or FEMALE");
+    }
   }
 }

@@ -1,3 +1,4 @@
 spring:
   liquibase:
-    enabled: false
+#    enabled: false
+    drop-first: true

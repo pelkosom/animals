@@ -1,13 +1,22 @@
 package com.personal.animals.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 
 @Builder
 public record AnimalDto(
-    long id,
+    @NotNull
+    Long id,
+    @NotBlank
     String name,
-    int age,
-    long breedId,
+    @NotNull
+    @Positive
+    Integer age,
+    @NotNull
+    Long breedId,
+    @NotBlank
     String gender) {
 
 }

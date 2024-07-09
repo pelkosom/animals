@@ -33,7 +33,7 @@ class AnimalWithDetailsControllerTest {
   void getAnimalsWithDetailsTest() {
     repository.saveAllAndFlush(Collections.singletonList(getAnimal()));
 
-    mockMvc.perform(get("/api/v1/animals-with-details/get-all-animals")
+    mockMvc.perform(get("/api/v1/animals-with-details")
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is2xxSuccessful())
         .andExpect(content().json(
