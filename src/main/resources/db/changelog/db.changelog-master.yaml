@@ -21,6 +21,7 @@ databaseChangeLog:
             columnNames: id
             constraintName: pk_breed
             tableName: breed
+
         - createTable:
             tableName: animal
             columns:
@@ -40,13 +41,11 @@ databaseChangeLog:
                   type: int
                   constraints:
                     nullable: false
-#                    TODO - age > 0
               - column:
                   name: gender
                   type: varchar(255)
                   constraints:
                     nullable: false
-#                    enum
               - column:
                   name: breed_id
                   type: long
@@ -56,4 +55,60 @@ databaseChangeLog:
             columnNames: id
             constraintName: pk_animal
             tableName: animal
-#        -forei
+        - addForeignKeyConstraint:
+            baseColumnNames: breed_id
+            baseTableName: animal
+            constraintName: fk_animal_breed
+            referencedColumnNames: id
+            referencedTableName: breed
+        - sql: "ALTER TABLE animal ADD CONSTRAINT age_check CHECK (age > 0)"
+
+  - changeSet:
+      id: "initialize breed table"
+      author: barci.peter@gmail.com
+      changes:
+        - insert:
+            tableName: breed
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: name
+                  value: "Afganský chrt"
+        - insert:
+            tableName: breed
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: name
+                  value: "Americká akita"
+        - insert:
+            tableName: breed
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: name
+                  value: "Anglický buldog"
+        - insert:
+            tableName: breed
+            columns:
+              - column:
+                  name: id
+                  value: "4"
+              - column:
+                  name: name
+                  value: "Belgický ovčiak"
+        - insert:
+            tableName: breed
+            columns:
+              - column:
+                  name: id
+                  value: "5"
+              - column:
+                  name: name
+                  value: "Bradáč"

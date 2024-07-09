@@ -13,17 +13,61 @@ java {
 	}
 }
 
+ext {
+	testContainersVersion = "1.19.8"
+	mapstructVersion = "1.5.5.Final"
+
+}
+
 repositories {
 	mavenCentral()
 }
+
+
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.liquibase:liquibase-core'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+
+	// test containers postgresql
+	implementation "org.testcontainers:postgresql:${testContainersVersion}"
+	testImplementation "org.testcontainers:junit-jupiter:${testContainersVersion}"
+	testImplementation "org.testcontainers:postgresql:${testContainersVersion}"
+
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.3.1'
+	implementation 'org.springframework.data:spring-data-jpa:3.3.1'
+
+	// core annotation processor libs
+	compileOnly 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+	//	mapstruct
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+
+//	TODO
+
+//	// https://mvnrepository.com/artifact/org.postgresql/postgresql
+//	implementation 'org.postgresql:postgresql:42.7.3'
+
+	// core runtime-only libs
+//	runtimeOnly "org.postgresql:postgresql"
+
+//	implementation group: 'org.postgresql', name: 'postgresql'
+//
+	runtimeOnly 'com.h2database:h2'
+
 }
 
 tasks.named('test') {
